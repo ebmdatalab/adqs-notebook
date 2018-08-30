@@ -1,0 +1,20 @@
+jupyter
+google-api-python-client
+pandas
+pandas-gbq
+tornado
+ipykernel
+requests
+requests-cache
+lxml
+xlrd
+psycopg2
+# For ein/elpy in emacs:
+elpy
+autopep8
+yapf
+black
+flake8
+pycodestyle<2.4.0  # see https://gitlab.com/pycqa/flake8/issues/406
+pytest
+progress
