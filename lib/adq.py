@@ -206,20 +206,3 @@ def dose_from_name(name):
                 return float(group)
     else:
         return 1.0
-
-
-def generate_adqs_per_quantity():
-    squs = pd.read_csv(SQUS_CSV)
-    df = normalised_dmd().merge(squs, on='bnf_code')
-    df = df.merge(normalised_adqs(), on='bnf_code')
-    # Compute the quantity_denominator. This prefers SQUs from data
-    # but where this is missing, uses a heuristic to guess.
-    df['quantity_denominator'] = df.apply(compute_quantity_units, axis=1)
-    # This is where the main logic happens
-    df['adq_per_quantity'] = df.apply(adq_per_quantity, axis=1)
-    df.to_csv("computed_adqs.csv")
-
-
-if __name__ == '__main__':
-    generate_adqs_per_quantity()
-    print("Created file at `computed_adqs.csv`")
