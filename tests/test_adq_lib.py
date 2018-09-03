@@ -1,6 +1,7 @@
+import pytest
 import pandas as pd
-from adq_lib import adq_per_quantity
-from adq_lib import dose_from_name
+from adq import adq_per_quantity
+from adq import dose_from_name
 import subprocess
 
 
@@ -556,7 +557,7 @@ def test_unit_with_blank_adq_denominator():
     assert _apply_adq(subject) == 0.5
 
 
-xdef xtest_num_and_denom_match_adq_form():
+def xtest_num_and_denom_match_adq_form():
     subject = {
         "Practice_Code": "P92017",
         "BNF_Description": "Normacol_Gran 62%",
@@ -677,6 +678,9 @@ def test_patch():
     assert _apply_adq(subject) == 3.333
 
 
+@pytest.mark.xfail(reason=(
+    'Not yet implemented unit-dose where denominator'
+    'is only in the name'))
 def test_unit_dose():
     subject = {
         'name': 'Imigran 10mg nasal spray',
@@ -701,6 +705,7 @@ def test_unit_dose():
     assert _apply_adq(subject) == 0.5
 
 
+@pytest.mark.xfail
 def test_unit_dose_with_percent():
     subject = {
         'name': 'Pirinase Hayfever 0.05% nasal spray',
@@ -727,6 +732,9 @@ def test_unit_dose_with_percent():
     assert _apply_adq(subject) == 0.5
 
 
+@pytest.mark.xfail(reason=(
+    'Not yet implemented unit-dose where denominator'
+    'is only in the name'))
 def test_another_dose():
     subject = {
         'name': 'Nasofan Allergy 50micrograms/dose nasal spray',
