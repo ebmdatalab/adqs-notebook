@@ -556,7 +556,7 @@ def test_unit_with_blank_adq_denominator():
     assert _apply_adq(subject) == 0.5
 
 
-def xtest_num_and_denom_match_adq_form():
+xdef xtest_num_and_denom_match_adq_form():
     subject = {
         "Practice_Code": "P92017",
         "BNF_Description": "Normacol_Gran 62%",
