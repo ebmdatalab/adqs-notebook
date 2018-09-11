@@ -16,10 +16,6 @@ def _sql_dir():
     return Path(__file__).parent / 'sql'
 
 
-def _data_dir():
-    return Path(__file__).parent / 'data'
-
-
 def calculated_adqs_csv(today):
     """Generate a CSV of ADQs back-calculated from monthly prescribing
     data
@@ -29,9 +25,7 @@ def calculated_adqs_csv(today):
         sql = f.read().format(latest_raw_prescribing_data)
     df = pd.io.gbq.read_gbq(
         sql, 'ebmdatalab', dialect='standard')
-    df.to_csv(os.path.join(
-        _data_dir(),
-        "provided_adqs_{}.csv".format(today)))
+    df.to_csv("provided_adqs_{}.csv".format(today))
 
 
 def product_details_csv(today):
@@ -48,9 +42,7 @@ def product_details_csv(today):
     cursor = conn.cursor()
     cursor.execute(sql)
     column_names = [desc[0] for desc in cursor.description]
-    with open(os.path.join(
-            _data_dir(),
-            "products_{}.csv".format(today), "w")) as f:
+    with open("products_{}.csv".format(today), "w") as f:
         w = csv.writer(f)
         w.writerow(column_names)
         for record in cursor:

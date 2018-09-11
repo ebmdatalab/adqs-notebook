@@ -12,6 +12,7 @@ From a comment in the XLS:
    Code 0  - individually formulated (unit varies)
 
 """
+from pathlib import Path
 from datetime import date
 from lxml import html
 from multiprocessing import Pool
@@ -30,8 +31,6 @@ import warnings
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
-
-requests_cache.install_cache('cache')
 
 SQU_LOOKUP = {
     1: 'unit',
@@ -73,7 +72,7 @@ def fetch_url(url):
     r = requests.get(url)
 
     path = os.path.join(
-        "pca_files", urllib.parse.urlparse(r.url)[2].split('/')[-1])
+        _files_dir(), urllib.parse.urlparse(r.url)[2].split('/')[-1])
     path = path.replace('%20', '_')
     if r.status_code == 200:
         with open(path, 'wb') as f:
@@ -89,7 +88,7 @@ def fetch_urls():
 
     urls = build_url_list(host, index)
     try:
-        os.mkdir("pca_files")
+        os.mkdir(_files_dir())
     except FileExistsError:
         pass
 
@@ -102,7 +101,7 @@ def fetch_urls():
 
 def create_csv(today):
     bnf_codes_with_squ = set()
-    files = glob.glob("pca_files/PCA*")
+    files = glob.glob(os.path.join(_files_dir(), "PCA*"))
     bar = Bar('Processing data', max=len(files))
     for path in files:
         bnf_codes_with_squ.update(process_file(path))
@@ -114,9 +113,12 @@ def create_csv(today):
     df.groupby('bnf_code').last()  # pick the most recent, where there are dupes
     df.to_csv("squs_{}.csv".format(today))
 
+def _files_dir():
+    return Path(__file__).parent.paren t/ 'data' / 'pca_files'
 
 def main():
     today = date.today().strftime("%Y_%m_%d")
+    requests_cache.install_cache('cache')
     fetch_urls()
     create_csv(today)
 
